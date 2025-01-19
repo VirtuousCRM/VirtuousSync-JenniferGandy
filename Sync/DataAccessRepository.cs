@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using Dapper;
 using System.Threading.Tasks;
+using Sync.Models;
 
 namespace Sync
 {

@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using Sync.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -32,17 +33,17 @@ namespace Sync
 
             var body = new ContactQueryRequest();
 
-            body.Groups = new List<object>()
+            body.Groups = new List<Group>()
             {
-                new
+                new Group
                 {
-                    conditions = new List<object>()
+                    Conditions = new List<Condition>()
                     {
-                        new
+                        new Condition
                         {
-                            parameter = "state",
-                            @operator = "contains",
-                            value = "Arizona"
+                            Parameter = "state",
+                            Operator = "contains",
+                            Value = "Arizona"
                         }
                     }
                 }

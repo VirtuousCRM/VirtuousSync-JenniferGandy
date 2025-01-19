@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Sync
+namespace Sync.Models
 {
     public class ContactQueryRequest
     {
         public ContactQueryRequest()
         {
-            Groups = new List<object>();
+            Groups = new List<Group>();
             SortBy = "Id";
             Descending = false;
         }
 
-        public List<object> Groups { get; set; }
+        public List<Group> Groups { get; set; }
 
         public string SortBy { get; set; }
 
