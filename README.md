@@ -17,4 +17,5 @@ You can find the API key for the exercise [here](https://keepersecurity.com/vaul
 
 ### Refactoring Updates
  - I switched the Group and Condition logic to be strongly typed as that is a core feature of C# and I want the benefits of it when I am querying an external api.
- - I also created a Models folder to group all POCOS (plain old C# / Clr / class objects), this is not for functionality but rather to ensure the codebase remains readable as it expands.
+ - I created a Models folder to group all POCOS (plain old C# / Clr / class objects), this is not for functionality but rather to ensure the codebase remains readable as it expands.
+ - I added simple try-catch logic to the main methods performing business logic required for the application to function.

@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Dapper;
 using System.Threading.Tasks;
 using Sync.Models;
+using System;
 
 namespace Sync
 {
@@ -17,15 +18,22 @@ namespace Sync
 
         public async Task SaveResults(IEnumerable<AbbreviatedContact> results)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
 
-                const string sql = "INSERT INTO contacts (Id, Name, ContactType, ContactName, Address, Email, Phone)" +
-                    "Values (@Id, @Name, @ContactType, @ContactName, @Address, @Email, @Phone)";
+                    const string sql = "INSERT INTO contacts (Id, Name, ContactType, ContactName, Address, Email, Phone)" +
+                        "Values (@Id, @Name, @ContactType, @ContactName, @Address, @Email, @Phone)";
 
-                await connection.ExecuteAsync(sql, results);
+                    await connection.ExecuteAsync(sql, results);
+                }
             }
+            catch (Exception ex) { 
+                Console.WriteLine(ex);      
+            }
+
         }
     }
 }
