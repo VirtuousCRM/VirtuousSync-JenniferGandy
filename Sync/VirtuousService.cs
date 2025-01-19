@@ -1,4 +1,7 @@
 ﻿using RestSharp;
+using Sync.Models;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sync
@@ -10,7 +13,7 @@ namespace Sync
     {
         private readonly RestClient _restClient;
 
-        public VirtuousService(IConfiguration configuration) 
+        public VirtuousService(IConfiguration configuration)
         {
             var apiBaseUrl = configuration.GetValue("VirtuousApiBaseUrl");
             var apiKey = configuration.GetValue("VirtuousApiKey");
@@ -25,14 +28,42 @@ namespace Sync
 
         public async Task<PagedResult<AbbreviatedContact>> GetContactsAsync(int skip, int take)
         {
-            var request = new RestRequest("/api/Contact/Query", Method.Post);
-            request.AddQueryParameter("Skip", skip);
-            request.AddQueryParameter("Take", take);
+            var response = new PagedResult<AbbreviatedContact>();
 
-            var body = new ContactQueryRequest();
-            request.AddJsonBody(body);
+            try
+            {
+                var request = new RestRequest("/api/Contact/Query", Method.Post);
+                request.AddQueryParameter("Skip", skip);
+                request.AddQueryParameter("Take", take);
 
-            var response = await _restClient.GetAsync<PagedResult<AbbreviatedContact>>(request);
+                var body = new ContactQueryRequest();
+
+                body.Groups = new List<Group>()
+            {
+                new Group
+                {
+                    Conditions = new List<Condition>()
+                    {
+                        new Condition
+                        {
+                            Parameter = "state",
+                            Operator = "contains",
+                            Value = "Arizona"
+                        }
+                    }
+                }
+            };
+
+                request.AddJsonBody(body);
+
+                response = await _restClient.PostAsync<PagedResult<AbbreviatedContact>>(request);
+                
+            }
+
+            catch (Exception ex) { 
+                Console.WriteLine(ex.ToString());
+            }
+
             return response;
         }
     }

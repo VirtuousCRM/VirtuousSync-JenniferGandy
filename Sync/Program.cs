@@ -16,26 +16,24 @@ namespace Sync
         private static async Task Sync()
         {
             var apiKey = "REPLACE_WITH_API_KEY_PROVIDED";
+            var connectionString = "REPLACE_WITH_DB_CONNECTION_STRING";
             var configuration = new Configuration(apiKey);
             var virtuousService = new VirtuousService(configuration);
+            var dataAccessRepo = new DataAccessRepository(connectionString);
 
             var skip = 0;
             var take = 100;
             var maxContacts = 1000;
             var hasMore = true;
 
-            using (var writer = new StreamWriter($"Contacts_{DateTime.Now:MM_dd_yyyy}.csv"))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            do
             {
-                do
-                {
-                    var contacts = await virtuousService.GetContactsAsync(skip, take);
-                    skip += take;
-                    csv.WriteRecords(contacts.List);
-                    hasMore = skip > maxContacts;
-                }
-                while (!hasMore);
+                var contacts = await virtuousService.GetContactsAsync(skip, take);
+                skip += take;
+                await dataAccessRepo.SaveResults(contacts.List);
+                hasMore = skip > maxContacts;
             }
+            while (!hasMore);
         }
     }
 }
